@@ -134,27 +134,11 @@ kubectl describe pods  #get more information on the pod
 
 ##YAML in Kubernetes
 
-Kubernetes uses YAML files as an inputs for the creation of objects such as POD's, replicas, deployments and services. All of these objects follow similar structure in Kubernetes definition file that always contains 4 top level fields.
+Kubernetes uses YAML files as an inputs for the creation of objects such as POD's, replicas, deployments and services. All of these objects follow similar structure in Kubernetes 
+definition file that always contains 4 top level fields.
 
-For example: If we take the POD object, below is the format for the same.
-
-filename: pod-definition.yml
-
-```yaml
-apiVersion: v1  
-kind: pod               
-metadata:                          
-	name: myapp-pod
-	labels: 
-		app: myapp
-		type: front-end
-
-spec: 
-  containers:
-		- name: nginx-container
-		  image: nginx
-
-```
+For example: If we take the POD object then refer this yaml file sample-nginxpod.yml
+Explanation for each fields.
 
 1. apiVersion: API version of the Kubernetes API for creating objects.
 
@@ -231,7 +215,14 @@ kubectl scale --replicas=6 replicaset <replica-set-name>  #NOTE: This will updat
 NOTE: Once we create a ReplicaSet pods and after that if we try to create a new pod without a ReplicaSet with the same label as the Replicas Set, the ReplicaSet will detect that pod and will delete it.
       But if we create a pod without a ReplicaSet with a different label the ReplicaSet will detect it and will check if the labels are same, if not the ReplicaSet will not delete that pod.
  
+##Deployments
 
+As new version comes of the application that is from version 1 to version 2. Now we have update our containers or pods to the new version. Kubernetes does not deploys the
+new version of an application all at one time. Instead of that it will deploy the new version of the application to all the containers one by one that is called as Rolling
+Updates. If any of the update goes wrong or failed, the Kubernetes can also perform the rollback update to the previous version. If we want to pause the deployments for any 
+modifications if needs to be performed than with the help of Kubernetes Deployments we can do that as well.
+
+![image 2: deployments](./videos-screenshots/deployments.png)
  
 
 
