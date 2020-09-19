@@ -367,6 +367,36 @@ Check the sample-service-clusterip.yml file for creating the ClusterIP service.
 This service provides a loadbalancer for our application in supported Cloud Provider.
 
 
+##Microservices
+
+Sample Voting Application. Below is the diagram for the voting application.
+
+![image 10: sample voting application](./videos-screenshots/sample-voting-application.png)
+
+In the above architecture there are multiple pods. Such as voting-app, in-memory DB, worker, result-app and db. For creating all these pods I have created `voting-app` 
+directory which contains all necessary yaml files for deploying this application. 
+
+Demo Steps:
+
+1. Create Kubernetes Pods
+
+voting-app-pod.yml
+redis-pod.yml
+result-pod.yml
+postgres-pod.yml
+worker-pod.yml
+
+2. Create Services - ClusterIP - Internal
+
+redis-service.yml
+postgres-service.yml
+
+3. Create Services - LoadBalancer - External
+
+voting-app-service.yml
+result-service.yml
+
+
 
 
 
