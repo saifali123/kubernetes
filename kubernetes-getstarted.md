@@ -334,11 +334,33 @@ Services are very flexible and Kubernetes takes care of itself. Below is the dia
 
 ![image 8: service-multinode-architecture](./videos-screenshots/service-multinode-architecture.png)
 
+Now, see the sample-service.yml file which is used for creating a service in Kubernetes Cluster. Use the below commands
+for creating, listing and deleting the services.
+
+```bash
+kubectl create -f sample-service.yml
+kubectl get services
+kubectl delete services myapp-service
+```
+
+
 
 2. ClusterIP
 
 In this, a Service creates a virtualIP inside the cluster to enable communication between different services such group of front-end servers
 to a group of backend servers.
+
+![image 9: clusterip](./videos-screenshots/clusterip.png)
+
+As we can see in the image, front-end pods are connected to the backend pods and backend pods are connected to redis pods.
+This connection between group of pods can be done using the ClusterIP Service. The ClusterIP Service when is created, it provides 
+a Cluster-name and clusterIP for a group of pods. This IP and name are there because if a single pod from a group of pods is 
+deleted or its IP is changed then it will not affect the communication between the group of pods. The ClusterIP provides a 
+name and IP for every group for integrating a communication between the group of pods. This allows us to easily deploy a microservice 
+based application on Kubernetes Cluster. Each layer can be easily scale or move without impacting the application. 
+The default service in Kubernetes is the ClusterIP Service.
+
+Check the sample-service-clusterip.yml file for creating the ClusterIP service.
 
 3. LoadBalancer
 
