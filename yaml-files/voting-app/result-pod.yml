@@ -9,6 +9,6 @@ metadata:
 spec:
   containers:
     - name: result
-      image: dockersamples/exampleresultapp_worker
+      image: dockersamples/exampleresultapp_result
       ports:
         - containerPort: 80
