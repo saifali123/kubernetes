@@ -248,6 +248,9 @@ This helps us to keep track of then changes made to our deployment and enables u
 kubectl rollout status deployment/myapp-deployment   #To check the status of the rollouts
 kubectl rollout history deployment/myapp-deployment  #To see the revisions and history of the rollouts
 ```
+
+And if we want to track the revision use the `kubectl rollout status deployment/myapp-deployment --record` this flag will keep track of the revisions and can be seen using the
+`kubectl rollout history deployment/myapp-deployment` command. 
  
  #Deployment Strategy
  
@@ -258,7 +261,7 @@ kubectl rollout history deployment/myapp-deployment  #To see the revisions and h
  For example, there are 5 nginx Pods are running, and now this nginx application has to be updated with the new application version. The Recreate Strategy will delete all the 5 nginx Pods
  and will create 5 new nginx Pods. This strategy will cause application down issue and will affect the users and customers. Thankfully, this is not the default Deployment strategy.
  
- 2. The Rolling Strategy
+ 2. The Rolling Update Strategy
  
  If we consider the same example, in this strategy, the Rolling strategy will not delete all the 5 nginx Pods directly. Instead, it will delete and one Pod and will create a new Pod with 
  the new nginx application version. This process will go till the 5 Pods one by one and will deploy the new nginx version seamlessly. This is the default Deployment Strategy.
@@ -276,9 +279,70 @@ kubectl set image deployment/myapp-deployment \   #This is not the best method a
 
 ```
  
+When we update the deployment it has created a new nginx:1.7.1 version container or Pods. While creating this, the deployment strategy which is Rolling Update strategy has created a
+new three containers and has deleted the old three Pods which were running on the nginx normal image. This can be seen in using the `kubectl get replicasets` which will display the
+old replicasets which is deleted and new replicasets which has created.
 
+Next, to undo the deployment or to rollback to the previous version of the nginx application use the `kubectl rollout undo deployment/myapp-deployment` command which will delete the
+new launched Pods and will launch the new Pods with the older nginx application version. After rolling back to the older version we can again use the `kubecetl get replicasets` 
+which will show the older version running and new version deleted.
+
+Creating the definition YAML file is recommended by the Kubernetes itself. Remember the first command which we used for creating the nginx pod which was 
+`kubectl run nginx --image=nginx`. This command is not the best practice for creating the Pod, but in the backend it creates the deployment of this Pod only. But instead of using 
+the CLI command use the definition YAML files to create the deployments of the Pods which is best practice.
+
+![image 4: commands-summary](./videos-screenshots/summary-commands.png)
+
+
+
+## Services
+
+* Kubernetes Services enable communication between various components within and outside of the application. 
+* Kubernetes Services helps us connect applications together with other applications or users.
+* For example, our application has groups of pods running various sections such as group of pods for serving front-end to the users. Other group of pods for running backend
+processes and third group connecting to external data source.
+* It is Services that enables connectivity between these groups of pods. Services enable the front-end application to be made available to end users. It also helps
+for front-end and backend pods to make communication between each other and also helps in establishing connectivity to an external data source. Thus microservices enable loose
+coupling between micro-services in our application. 
  
- 
+![image 5: services](./videos-screenshots/services.png)
+
+
+* For example for clear understanding. Let check our current architecture which we have deployed on the AWS EC2 instances.
+
+I have a MacOS machine. Next I have created 1 EC2 Master Node and 2 EC2 Worker Nodes on the AWS platform.
+My Master Node has created one nginx pod on the Worker Node 1. But now I need to access that nginx web page from MacOS machine.
+So the Kubernetes Service is responsible for integrating my MacOS machine with the Worker Node 1 EC2 instance and inside that instance
+that nginx pod is running.
+
+![image 6: service-architecture](./videos-screenshots/service-architecture.png)  
+
+As we can see in the diagram, that we are getting back the request from the Worker Node 1 through the Service using a port number that is
+the reason it is called as NodePort service.
+
+# Types of Services
+
+1. NodePort
+
+The above diagram is of the NodePort service. In which, where the Service makes the internal pod accessible via Port on the Node.
+
+![image 7: service-indepth-architecture](./videos-screenshots/service-indepth-architecture.png)
+
+The above architecture is for single pod. What happens when there are multiple pods on multiple nodes ?
+The Service will automatically spans across multiple pods and nodes and will balance the load between all these pods and nodes. So YES!,
+Services are very flexible and Kubernetes takes care of itself. Below is the diagram for the multinode architecture.
+
+![image 8: service-multinode-architecture](./videos-screenshots/service-multinode-architecture.png)
+
+
+2. ClusterIP
+
+In this, a Service creates a virtualIP inside the cluster to enable communication between different services such group of front-end servers
+to a group of backend servers.
+
+3. LoadBalancer
+
+This service provides a loadbalancer for our application in supported Cloud Provider.
 
 
 
