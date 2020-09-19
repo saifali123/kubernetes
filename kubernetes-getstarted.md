@@ -224,6 +224,61 @@ modifications if needs to be performed than with the help of Kubernetes Deployme
 
 ![image 2: deployments](./videos-screenshots/deployments.png)
  
+See the sample-deployment.yml file that creates a deployment pods. Use the below command to create and list the deployments.
+ 
+```bash
+kubectl create -f sample-deployment.yml
+kubectl get deployments
+kubectl get all
+kubectl delete deployments myapp-deployment 
+```
+
+If we are using Kubernetes in Production Environment, then will not create any yaml files for Pods and ReplicaSet. There will be only deployment yaml file which will contain our deployment metadata, 
+specification for the pods and ReplicaSet count and details.
+
+#Rollouts and Versioning in Deployment
+
+When we first create a deployment it triggers a rollout a new rollout creates a new deployment revision. Let's call it revision 1.
+In the future, when the application is upgraded meaning when the container version is updated to a new one a new rollout is triggered and a new deployment revision is created named revision 2.
+This helps us to keep track of then changes made to our deployment and enables us to rollback to a previous version of deployment if necessary.
+
+![image 3: rolling and versioning](./videos-screenshots/rollingandversioning.png)
+
+```bash
+kubectl rollout status deployment/myapp-deployment   #To check the status of the rollouts
+kubectl rollout history deployment/myapp-deployment  #To see the revisions and history of the rollouts
+```
+ 
+ #Deployment Strategy
+ 
+ There are two deployment strategies: 
+ 
+ 1. The Recreate Strategy
+ 
+ For example, there are 5 nginx Pods are running, and now this nginx application has to be updated with the new application version. The Recreate Strategy will delete all the 5 nginx Pods
+ and will create 5 new nginx Pods. This strategy will cause application down issue and will affect the users and customers. Thankfully, this is not the default Deployment strategy.
+ 
+ 2. The Rolling Strategy
+ 
+ If we consider the same example, in this strategy, the Rolling strategy will not delete all the 5 nginx Pods directly. Instead, it will delete and one Pod and will create a new Pod with 
+ the new nginx application version. This process will go till the 5 Pods one by one and will deploy the new nginx version seamlessly. This is the default Deployment Strategy.
+ 
+ Now, we have already created a Deployment definition yaml file which is sample-deployment.yml. So in this file we will update the nginx container image version. 
+ See the updated Deployment file.
+ 
+ Now, to update the deployment with the new container image use the below command.
+ 
+ ```bash
+kubectl apply -f sample-deployment.yml  #This is the best method, as the definition yaml file will also contain the track of the version.
+
+kubectl set image deployment/myapp-deployment \   #This is not the best method as we are updating using the CLI and it will not keep track in the definition yaml file.
+     nginx=nginx:1.7.1
+
+```
+ 
+
+ 
+ 
 
 
 

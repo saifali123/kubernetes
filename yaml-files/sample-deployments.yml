@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
         - name: nginx-container
-          image: nginx
+          #image:nginx #v1-version
+          image: nginx:1.7.1 #v2-version
 
   replicas: 3
   selector:
