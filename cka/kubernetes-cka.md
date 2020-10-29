@@ -871,7 +871,7 @@ Strategy 3: One new node is added in the cluster with new upgraded version of Ku
 * Steps to upgrade Worker Node:
     * First we have to shift our pods from the first node to second node using the `kubectl drain node01` command. This command will shift existing pods to other nodes if the pods are in Replica Set. Once the pods are shifted to second node then the first node will go in the unschedulable state that means no new pods will be schedule on it. Next perform the below steps:
     
-    ```shell script
+    ```shell
     apt-get upgrade -y kubeadm=1.12.0-00 
     apt-get upgrade -y kubelet=1.12.0-00
     kubeadm upgrade node config --kubelet-version v1.12.0
@@ -1261,10 +1261,161 @@ kubectl auth can-i create pods --as <username> --namespace <namespace-name>   # 
         
 ### Securing Images
 
+* To store the docker hub credentials in the Kubernetes Cluster, perform below steps:
+```shell script
+kubectl create secret docker-registry regcred \    # docker-hub creds are stored in the kubernetes secrets
+  --docker-server=<registery-name> \
+  --docker-username=<registry-username> \
+  --docker-password=<registry-password> \
+  --docker-email=<registry-email>
+```
+
+Once, secrets are stored, specify them in the nginxpod-definitio.yml file, such as below:
+
+```yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginxpod
+spec:
+  containers:
+   - name: nginxcontainer
+     image: <registry-name>/<image-name>
+  imagePullSecrets:
+   - name: regcred 
+```
+These credentials are then used by kubelets to pull the images on worker nodes and creates a pod.
 
 
+### Security Contexts
 
+* If we want to run some commands inside the container using the users which are residing inside the container then we can use `securityContext` for that.
+
+* For example,
+
+```yaml
+
+```
+
+* We can configure the security level such on pod level as well as on container level. While creating pods we can specify the user id for that pod, that means all the containers within that pod, will use that specific user id for executing the specified commands and if we have to apply some linux capability we can add that as well.  
  
+ * If we specify on the container level, the user id specified in that container level, that user within that container only can run the commands.
+ 
+ * Remember that, if we specify the user id on pod level as well as on container level, the container level user id will overright the pod user id and its commands as well.
+ 
+ * On the pod level, it is done such as below:
+ 
+ ```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  securityContext:
+    runAsUser: 1000  # This user id is resided inside the container, that means there is a user inside the container with this user id that will execute the below commands which is sleep.
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command: ["sleep", "3600"]  
+```
+
+* On container level, it is done such as below:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:  
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command: ["sleep", "3600"]  
+      securityContext:
+          runAsUser: 1000    # This user will only use in this particualar container only, same goes with the capabilities.
+          capabilities: 
+            add: ["MAC_ADMIN"] 
+```
+ * Using capabilities gives a binary root permissions for only a limited set of systems calls. So even if there would be a software leak, it may not even be abused. For example the ping command in this article. This command would not be able to change ownership of a file, with the chown system call, where a setuid binary would have been.
+ 
+### Network Policy
+
+* Remember this below diagram. Will explain it later.
+
+![Network Traffic](./videos-screenshots/networktraffic.png)
+
+* In Kubernetes Cluster, by default all pods can access to each other even though they are residing on other nodes.
+
+* In the above architecture, the Api pod should be the only one to access the DB pod, but by default in the Kubernetes Cluster the Web pod can access to DB pod, but we have to restric this. This Pod restriction to access other pods on network can be done using the **Network Policy**. 
+
+* With the help of Network Policy, we can configure the DB pod to receive the ingress traffic from the API pod on port 3306 only. It will not recieve any traffic other than the API pod on Port 3306. 
+
+* Perform the below steps to achieve this:
+    * Label the pod with role: db such as like this
+    ```yaml
+    metadata:
+      name: dbpodname
+      labels:
+        role: db
+    ```
+    
+    * Create the Network Policy using the dbpod label, in below yaml script, the db pod will only recieve the ingress traffic from       api pod.
+    ```yaml
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata: 
+      name: db-networkpolicy
+    spec: 
+      podSelector:
+        matchLabels:
+          role: db     # dbpod will receive
+        policyTypes:
+        - Ingress      # the Ingress Policy Type
+        ingress:
+        - from: 
+          - podSelector:
+              matchLabels:
+                name: api-pod   # From api pod
+          ports:
+          - protocol: TCP
+            port: 3306       # On port 3306
+    ```
+     Now, create the network policy `kubectl create -f networkpolicy.yml`
+     
+     * Network Policy can only be supported on:
+        * Kube-router
+        * Calico
+        * Romana
+        * Weave-net
+     
+     * Network Policy is not supported on:
+        * Fannel         
+
+# Storage
+
+### Docker Storage
+
+In Docker Storage there are two types of storage such as: 
+
+* Storage Drivers: Storage Drivers are handled by storage drivers plugins.
+    * AUFS (Default driver for Ubuntu)
+    * ZFS
+    * BTRFS
+    * Device Mapper
+    * Overlay
+    * Overlay2
+    
+* Volume Drivers
+    * Volume Drivers are handled by volumes drivers plugins.
+    * It stores the volumes 
+    
+
+* There are two types of mounts:
+    * Volume Mount
+    Volume Mount mounts a directory of the docker volume on the volumes directory, which is in /var/lib/docker/volumes.
+    * Bind Mount
+    Bind Mount mounts a directory  of the docker volumes on anywhere where the volume or data is residing such as external directories, EFS, etc.
 # IMPORTANT COMMANDS
 
 * To modify the existing replicasets image use `kubectl edit replicaset replicaset-name` command. Modify the image name and then save the file.
@@ -1285,3 +1436,5 @@ kubectl auth can-i create pods --as <username> --namespace <namespace-name>   # 
 * URLs and APIs
     * To get the Kube-Api server information use `curl http://kube-master:6443/version`
     * To list the pods use `curl https://kube-master:6443/api/v1/pods`
+    
+* kubectl exec -it ubuntu-sleeper -- date -s '19 APR 2012 11:14:00'
