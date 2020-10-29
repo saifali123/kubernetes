@@ -1,10 +1,17 @@
+import psutil
+from flask import Flask
 from kubernetes import client, config
+import os
 
-# Configs can be set in Configuration class directly or using helper utility
-config.load_kube_config()
+cpu = psutil.cpu_percent()
 
-v1 = client.CoreV1Api()
-print("Listing pods with their IPs:")
-ret = v1.list_pod_for_all_namespaces(watch=False)
-for i in ret.items:
-    print("%s\t%s\t%s" % (i.status.pod_ip, i.metadata.namespace, i.metadata.name))
+if cpu > 5:
+    print("Cpu is greater than 5")
+    app = Flask(__name__)
+    @app.route("/")
+    def hello():
+         return "Hello from Python!"
+    if __name__ == "__main__":
+        app.run(host='0.0.0.0')
+
+
