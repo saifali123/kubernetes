@@ -93,7 +93,7 @@ Worker nodes hosts applications as containers.
 * To get the kube-api server details, it is totally depends on how we have setup the kubernetes cluster. To setup the kubernetes cluster, there are two ways, using the kubeadm tool or without using the kubeadm which is the hard-way
 * To get the details of the kube-api server which is setup using the kubeadm tool, we can get the kube-api server pod by listing all pods using `kubectl get pods -n kube-system ` command.
 We can see the definition yaml file for the kube-api server in the /etc/kubernetes/manifests/kube-apiserver.yml location.
-* Whereas, if the kubernetes cluster is setup without the kubeadm tool, that is the hard-way, we can see the kube-api server definition yaml file in /etc/systemd/system/kube-apiserver.service. To also see the kube-apiserver process on the master node use `ps aux | grep kube-apiserver` command
+* Whereas, if the kubernetes cluster is setup without the kubeadm tool, that is the hard-way, we can see the kube-api server definition yaml file in **/etc/systemd/system/kube-apiserver.service**. To also see the kube-apiserver process on the master node use `ps aux | grep kube-apiserver` command
      
     
     
