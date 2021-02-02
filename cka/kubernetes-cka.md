@@ -80,11 +80,6 @@ Worker nodes hosts applications as containers.
 # 2. Kube-API Server
 
 * When we execute any `kubectl` command such as `kubectl get nodes` this request goes to kube-api server, kube-api server then authenticates the request and validates it. The kube-api server then request the get nodes data to the etcd cluster and response back with the get nodes data. 
-
-```mermaid
-Bob->Alice : hello
-```
-
 * Kube-api server performs the below tasks
     1. Authenticate User
     2. Validate Request
