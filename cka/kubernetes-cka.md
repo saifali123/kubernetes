@@ -64,6 +64,14 @@ Worker nodes hosts applications as containers.
 
 ## ETCD in Kubernetes
 * ETCD cluster stores cluster information such as 
+  * Nodes
+  * Pods
+  * Configs
+  * Secrets
+  * Accounts
+  * Roles
+  * Bindings
+  * Others
 * To get all the keys which are stored in Kubernetes etcd use `kubectl exec etcd-master -n kube-system etcdl get / --prefix -keys-only` command.
 * Kubernetes stores the data in a specific directory structure. The root directory is the registry directory and under that all directories are present such as minions, pods, replicasets,
   deployments, roles and secrets.
