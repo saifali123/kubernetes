@@ -1,14 +1,14 @@
-#Kubernetes Architecture.
+# Kubernetes Architecture.
 
-##Master Node
+## Master Node
 
 * Master Node is responsible for managing, planning, scheduling and monitoring the nodes.
 
 * Master Node contains multiple components which handles all these operations. These components are called as **Control Plane Components**.
 
-####* Control Plane Components: 
+### Control Plane Components: 
 
-1. etcd
+1. **etcd**
 
 Containers information are stored in a key-value distributed database which is called as etcd. ETCD is a distributed reliable key-value store that is Simple, Secure and Fast. 
 It stores the kubernetes cluster information such as:
@@ -22,36 +22,34 @@ It stores the kubernetes cluster information such as:
   * Bindings
   * Others
   
-2. kube-scheduler
+2. **kube-scheduler**
 
 Kube-scheduler is responsible for placing a right container on a node based on the container resource requirements and constraints.
 
-3. Controllers-Manager
+3. **Controllers-Manager**
 
 Controllers are responsible in Kubernetes for certain areas and sections. There are multiple controllers who does this, such as:
 
   * Node Controller: The Node Controller takes cares of Nodes. They are responsible for provisioning new Nodes on the cluster, handling of Nodes if not healthy or gets destroyed.
   * Replication Controller: Replication Controller are responsible for checking the desired number of replications running.
 
-4. kube-apiserver
+4. **kube-apiserver**
 
 The kube-apiserver is responsible for handling all of these components to work all together. It orchestrates all these components in Kubernetes Cluster. 
 The kube-apiserver is the external interface for a customer or a user for performing operations and managing the kubernetes cluster.
 
-5. kubelet
+5. **kubelet**
 
 A kubelet is an agent which runs on each node, it listens the instructions from the kube-apiserver and deletes or creates the nodes as instructed from the kube-apiserver.
 Kube-apiserver always fetches information of all the nodes in the cluster for checking the status.
 
-6. kube-proxy service
+6. **kube-proxy service**
 
 The kube-proxy service is responsible for helping worker nodes to communicate each other.                                                                          
                                                                                                
 
- 
 
-
-##Worker Node
+## Worker Node
 
 Worker nodes hosts applications as containers.
 
@@ -64,7 +62,7 @@ Worker nodes hosts applications as containers.
 * The default etcd client is `./etcdctl` and can be used to store and retrieve the key value data.
 * To store the key value data use `./etcdctl set key1 value1` command. Whereas to retrieve the data use `./etcdctl get key1 ` and for more information use `./etcdctl` command only. 
 
-##ETCD in Kubernetes
+## ETCD in Kubernetes
 * ETCD cluster stores cluster information such as 
 * To get all the keys which are stored in Kubernetes etcd use `kubectl exec etcd-master -n kube-system etcdl get / --prefix -keys-only` command.
 * Kubernetes stores the data in a specific directory structure. The root directory is the registry directory and under that all directories are present such as minions, pods, replicasets,
