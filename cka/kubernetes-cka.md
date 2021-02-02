@@ -75,8 +75,7 @@ Worker nodes hosts applications as containers.
 * To get all the keys which are stored in Kubernetes etcd use `kubectl exec etcd-master -n kube-system etcdl get / --prefix -keys-only` command.
 * Kubernetes stores the data in a specific directory structure. The root directory is the registry directory and under that all directories are present such as minions, pods, replicasets,
   deployments, roles and secrets.
-* In a high availability environment, we will have multiple masters node in the cluster on top of that masters node there will be etcd pods. The connection between these etcd pods are 
-  configured in the etcd.service configuration. In the initial cluster flag, in the etcd.service configuration, there we have to specify the etcd pods details.   
+* In a high availability environment, we will have multiple masters node in the cluster on top of that masters node there will be etcd pods. The connection between these etcd pods are configured in the **etcd.service** configuration. In the initial cluster flag, in the **etcd.service** configuration, there we have to specify the etcd pods details.   
 
 # 2. Kube-API Server
 
