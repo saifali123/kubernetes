@@ -12,6 +12,14 @@
   * Scalable
   * Secure
   * Single Tenant
-  * AWS installs 
+  * AWS installs, operates and maintains the Kubernetes control plane so we dont have to.
+  
+## Fully Compatible
+  * No vendor lock-in
+   * Any applications that run on EKS are fully compatible with any standard Kubernetes environment:
+    * On-premises
+    * Public Cloud Provider
+    
+ 
 
 
