@@ -200,24 +200,24 @@ Here,
 
 * To list the pods from the default namespace use `kubectl get pods` command. To list the pods from another namespace such as kube-system use `kubectl get pods --namespace=kube-system`
 
-* Next, to create a pod in a default namespace use `kubectl create -f po-definition.yml` command. Whereas, to create a pod in another namespace use `kubectl create -f pod-defintion.yml --namespace=<namespace-name>`
+* Next, to create a pod in a default namespace use `kubectl create -f pod-definition.yml` command. Whereas, to create a pod in another namespace use `kubectl create -f pod-defintion.yml --namespace=<namespace-name>`
 
 * To create a pod in another namespace using the pod-definition.yml file, specify `namespace: <namespace-name>` under the metadata section.
 
 * To create a namespace using the CLI command use `kubectl create namespace <namespace-name>`. Whereas to create a namespace from the definition.yml file use below script.
 
-```hcl-terraform
+```yaml
 apiVersion: v1
 kind: Namespace
 metadata:
   name: <namespace-name>
 ```       
 
-* By default, we are in the default namespace. But if we need to swith to another namespace, or to set our custom namespace as a default namespace to us, then we can switch to another namespace by using this `kubectl config set-context $(kubectl config current-context) --namespace=<namespace-name>` command. However, if we need to list the pods of the kubernetes default namespaces after switching to our custom namespaces then we have to specify the `--namespace=default` option  for listing the pods of the kubernetes default namespace. To list the pods from all the namespaces use `kubectl get pods --all-namespaces` command.
+* By default, we are in the default namespace. But if we need to switch to another namespace, or to set our custom namespace as a default namespace to us, then we can switch to another namespace by using this `kubectl config set-context $(kubectl config current-context) --namespace=<namespace-name>` command. However, if we need to list the pods of the kubernetes default namespaces after switching to our custom namespaces then we have to specify the `--namespace=default` option  for listing the pods of the kubernetes default namespace. To list the pods from all the namespaces use `kubectl get pods --all-namespaces` command.
 
 * To set the resource limit for a namespace, create a resource quota such as below example:
 
-```hcl-terraform
+```yaml
 apiVersion: v1
 kind: ResourceQuota
 metadata:
