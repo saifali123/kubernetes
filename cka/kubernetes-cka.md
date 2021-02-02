@@ -73,13 +73,15 @@ Worker nodes hosts applications as containers.
   * Bindings
   * Others
 * To get all the keys which are stored in Kubernetes etcd use `kubectl exec etcd-master -n kube-system etcdl get / --prefix -keys-only` command.
-* Kubernetes stores the data in a specific directory structure. The root directory is the registry directory and under that all directories are present such as minions, pods, replicasets,
-  deployments, roles and secrets.
-* In a high availability environment, we will have multiple masters node in the cluster on top of that masters node there will be etcd pods. The connection between these etcd pods are configured in the **etcd.service** configuration. In the initial cluster flag, in the **etcd.service** configuration, there we have to specify the etcd pods details.   
+* Kubernetes stores the data in a specific directory structure. The root directory is the registry directory and under that all directories are present such as minions, pods, replicasets, deployments, roles and secrets.
+* In a high availability environment, we will have multiple masters node in the cluster on top of that masters node there will be pods. The connection between these etcd pods are configured in the **etcd.service** configuration. In the initial cluster flag, in the **etcd.service** configuration, there we have to specify the etcd pods details.   
 
 # 2. Kube-API Server
 
 * When we execute any `kubectl` command such as `kubectl get nodes` this request goes to kube-api server, kube-api server then authenticates the request and validates it. The kube-api server then request the get nodes data to the etcd cluster and response back with the get nodes data. 
+
+![kubetctl get nodes](./videos-screenshots/getnodes.png)
+
 * Kube-api server performs the below tasks
     1. Authenticate User
     2. Validate Request
