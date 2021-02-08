@@ -1,0 +1,14 @@
+apiVersion: v1     #string
+
+kind: Pod          #string
+
+metadata:           #dictionary
+  name: myapp-pod   
+  labels:            
+    app: myapp      
+    type: front-end
+
+spec:              #dictionary
+  containers:      #list/array 
+    - name: nginx-controller    # "-" for name specifies that it is the first item in the list.
+      image: nginx
