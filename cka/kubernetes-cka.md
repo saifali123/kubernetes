@@ -244,6 +244,8 @@ kubectl create deployment --image=nginx nginx
 kubectl expose deployment nginx --port 80
 kubectl edit deployment nginx  # Edit command modifies the current state of the kubernetes resources, not the definition yaml files.
 kubectl scale deployment nginx --replicas=5 
+kubectl scale --replicas=6 -f replicaset-definition.yml
+kubectl scale --replicas=6 replicaset myapp-replicaset
 kubectl set image deployment nginx nginx=nginx:1.18
 ```
 
