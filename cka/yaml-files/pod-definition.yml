@@ -4,6 +4,7 @@ kind: Pod          #string
 
 metadata:           #dictionary
   name: myapp-pod   
+  namespace: dev
   labels:            
     app: myapp      
     type: front-end
