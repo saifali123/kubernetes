@@ -244,9 +244,15 @@ kubectl create deployment --image=nginx nginx
 kubectl expose deployment nginx --port 80
 kubectl edit deployment nginx  # Edit command modifies the current state of the kubernetes resources, not the definition yaml files.
 kubectl scale deployment nginx --replicas=5 
+kubectl set image deployment nginx nginx=nginx:1.18
+
 kubectl scale --replicas=6 -f replicaset-definition.yml
 kubectl scale --replicas=6 replicaset myapp-replicaset
-kubectl set image deployment nginx nginx=nginx:1.18
+kubectl create -f replicaset-definition.yml
+kubectl get replicaset
+kubectl delete replicaset myapp-replicaset
+kubectl replace -f replicaset-definition.yml
+kubectl scale -replicas=6 -f replicaset-definition.yml
 ```
 
 * `--dry-run`: By default as soon as the command is run, the resource will be created. If you simply want to test your command, use the `--dry-run=client` option. This will not create the resource, instead, tell you whether the resource can be created and if your command is right.
