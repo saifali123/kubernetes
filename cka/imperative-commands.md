@@ -51,6 +51,7 @@ kubectl scale -replicas=6 -f replicaset-definition.yml
 
 ```bash
 kubectl create namespace <namespace-name>
+kubectl config set-context $(kubectl config current-context) --namespace=dev   #set the default namespace as dev
 ```
 
 
