@@ -6,7 +6,7 @@
 ```bash
 kubectl run --image=nginx nginx
 kubectl run nginx --image=nginx --dry-run=client -o yaml   ##Generate POD Manifest YAML file (-o yaml). Don't create it(--dry-run)
-kubectl create deployment --image=nginx nginx
+kubectl create deployment --image=nginx nginx --namespace=<namespace-name>
 kubectl create deployment --image=nginx nginx --dry-run=client -o yaml  # Generate Deployment YAML file (-o yaml). Don't create it(--dry-run)
 kubectl expose deployment nginx --port 80
 kubectl edit deployment nginx  # Edit command modifies the current state of the kubernetes resources, not the definition yaml files.
