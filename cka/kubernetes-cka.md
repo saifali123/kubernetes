@@ -1,12 +1,14 @@
-# Kubernetes Architecture.
+# Certified Kubernetes Administration
 
-## Master Node
+## Section 2: Core Concepts
+
+### Master Node
 
 * Master Node is responsible for managing, planning, scheduling and monitoring the nodes.
 
 * Master Node contains multiple components which handles all these operations. These components are called as **Control Plane Components**.
 
-### Control Plane Components: 
+#### Control Plane Components: 
 
 1. **etcd**
 
@@ -49,20 +51,20 @@ The kube-proxy service is responsible for helping worker nodes to communicate ea
                                                                                                
 
 
-## Worker Node
+### Worker Node
 
 Worker nodes hosts applications as containers.
 
 ![kubernetes-architecture](./videos-screenshots/kubernetes-architecture.png)
 
-# 1. ETCD 
+#### 1. ETCD 
 ![ETCD](./videos-screenshots/etcd.png)
 
 * ETCD runs on port 2379 and can be run using `./etcd` command.
 * The default etcd client is `./etcdctl` and can be used to store and retrieve the key value data.
 * To store the key value data use `./etcdctl set key1 value1` command. Whereas to retrieve the data use `./etcdctl get key1 ` and for more information use `./etcdctl` command only. 
 
-## ETCD in Kubernetes
+##### ETCD in Kubernetes
 * ETCD cluster stores cluster information such as 
   * Nodes
   * Pods
@@ -76,7 +78,7 @@ Worker nodes hosts applications as containers.
 * Kubernetes stores the data in a specific directory structure. The root directory is the registry directory and under that all directories are present such as minions, pods, replicasets, deployments, roles and secrets.
 * In a high availability environment, we will have multiple masters node in the cluster on top of that masters node there will be pods. The connection between these etcd pods are configured in the **etcd.service** configuration. In the initial cluster flag, in the **etcd.service** configuration, there we have to specify the etcd pods details.   
 
-# 2. Kube-API Server
+#### 2. Kube-API Server
 
 * When we execute any `kubectl` command such as `kubectl get nodes` this request goes to kube-api server, kube-api server then authenticates the request and validates it. The kube-api server then request the get nodes data to the etcd cluster and response back with the get nodes data. 
 
@@ -99,11 +101,11 @@ We can see the definition yaml file for the kube-api server in the /etc/kubernet
      
     
     
-# 3. Kube Controller Manager
+#### 3. Kube Controller Manager
 
 A controller is a process that continously monitors the state of various components within the system and works towards bringing the whole system to the desired functioning state. 
 
-## i. Node controller
+##### i. Node controller
 
 ![Node Controller](./videos-screenshots/nodecontroller.png)
 
@@ -111,7 +113,7 @@ A controller is a process that continously monitors the state of various compone
 * The node controller checks the status of the nodes every 5 seconds that way it monitors the status of the nodes. If node controllers stops receiving heart beats, it declares          that node as unreachable. Before officially declaring the node as unreachable, the node controller waits for more 40 seconds.
 * After the node is declared or marked as unreachable, node controller gives 5 minutes to the node to come back. If it does not come, the node controller removes the created pods from that unreachable node and provisions them on the healthy one if the pods are the part of the replica set.  
 
-## ii. Replication Controller
+##### ii. Replication Controller
 
 * It is responsible for monitoring the status of the replica sets and ensures that the desired number of pods are available at all times within the replica sets. If a pod dies it creates another one.
 
@@ -129,7 +131,7 @@ A controller is a process that continously monitors the state of various compone
 
 
 
-# 4. Kube Scheduler
+#### 4. Kube Scheduler
 
 * Kube-scheduler only decides which pods goes on which node. It does not actually place the pods on the node, thats the job of kubelet. The kubelet is responsible for creating the pods on the nodes. The scheduler only decides which pods goes on which nodes.
 
@@ -143,7 +145,7 @@ A controller is a process that continously monitors the state of various compone
 
 * To see the process on the master node use `ps aux | grep kube-scheduler` command
 
-# 5. Kubelet
+#### 5. Kubelet
 
 * Kubelet registers the nodes in the kubernetes cluster. When it receives the instructions  to load a pods on the nodes it requests the container runtime engine such as Docker to pull the required image and run the pods. The kubelet then monitors the pods and response to the kube-api server on a timely basis.
 
@@ -153,7 +155,7 @@ A controller is a process that continously monitors the state of various compone
 
 * To view the kubelet process on the worker nodes use `ps aux | grep kubelet` command. 
 
-# 6. Kubeproxy
+#### 6. Kubeproxy
 
 * Kube-proxy is a process on each node in the kubernetes cluster. Its job is to look for new services and every time a new service is created it creates an appropriate rules on each node to forward traffic to those services to the backend pods.
 
@@ -168,7 +170,7 @@ A controller is a process that continously monitors the state of various compone
 * To view the pod of the kube-proxy use the `kubectl get pods -n kube-system` command.
 
  
-# Namespaces
+#### Namespaces
 
 * There are different namespaces for different purpose. For example, kube-system namespace is the kubernetes official namespace where it deploys all its important components. Next, the second namespace is the default namespace, where we as a user creates our own resources such as pods, deployments, services, replicasets, etc. These namespaces are isolated with each other for not interrupting each other namespaces and keep it secured. The third namespace is kube-public, in this, the resources that should be made available to all users are created. So whenever we setup a kubernetes cluster it creates three namespaces automatically, they are:
        1. kube-system (official kubernetes namespace)
@@ -235,9 +237,24 @@ spec:
 Now, to create this resource quota for specified namespace use `kubectl create -f resource-quota-definition.yml` command.
 
 
+## Section 3: Scheduling
+
+### Manual Scheduling
+
+For manually schedule a pod to a specific node, use `nodeName: <node-name` under the `spec` module.
+
+```yaml
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+  nodeName: node02
+```
+
+If a node is not assigned to a pod using the pod-definition file, it will be in the pending state. We can only assign a pod to a node at creation time. What happens if we want to assign a node to a existing pod which is already created ?, Kubernetes won't allow us to modify nodeName property of an existing pod. Well, another way of modifying a node of an existing pod is creating binding object and send a post request to the pods binding API
 
 
-# Selectors and Labels
+### Selectors and Labels
 
 * To list the pods with the all labels use `kubectl get pods --show-labels` command
 
@@ -249,12 +266,12 @@ Now, to create this resource quota for specified namespace use `kubectl create -
 
 * To list the pods by filtering with the selectors and labels use `kubectl get pods --selector app=App1` command.
 
-## Annotations
+### Annotations
 
 It records some information such as tool details as, name, versions or contact details, email id that can be used for any integration purpose. 
 
 
-# Taints and Tolerants
+### Taints and Tolerants
 
 * With the help of taints and tolerants, we can restrict the scheduling of a pod to a particular node. For example, if there are three nodes and three pods. These three pods are not attached to any nodes yet. But when a taint is attached to a node 1 then none of the three pods can be scheduled on the node 1. All of the pods will be scheduled on the node 2 and node 3. However, when we apply tolerant on one of the pod, then that one pod can be scheduled on the node 1 as we have applied tolerant to that pod. Note that, Taints are applied to nodes only and tolerants are applied to a pod.
 
@@ -290,7 +307,7 @@ spec:
  
     * `kubectl taint nodes <node-name> <taints-value>-`
  
-# Node Selectors
+### Node Selectors
 
 You can constrain a Pod to only be able to run on particular Node(s), or to prefer to run on particular nodes. There are several ways to do this, and the recommended approaches all use label selectors to make the selection. Generally such constraints are unnecessary, as the scheduler will automatically do a reasonable placement (e.g. spread your pods across nodes, not place the pod on a node with insufficient free resources, etc.) but there are some circumstances where you may want more control on a node where a pod lands, for example to ensure that a pod ends up on a machine with an SSD attached to it, or to co-locate pods from two different services that communicate a lot into the same availability zone.
 
