@@ -58,6 +58,8 @@ kubectl config set-context $(kubectl config current-context) --namespace=dev   #
 ```bash
 kubectl expose pod redis --port=6379 --name=redis-service --dry-run=client -o yaml   # Create a Service named redis-service of type ClusterIP to expose pod redis on port 6379 (This will automatically use the pod's labels as selectors)
 kubectl expose pod nginx --port=80 --name nginx-service --type=NodePort --dry-run=client -o yaml   # Create a Service named nginx of type NodePort to expose pod nginx's port 80 on port 30080 on the nodes
+kubectl run httpd --image=httpd:alpine --port=80 --expose   # create a pod 
+
 ```
 
 Reference: [https://kubernetes.io/docs/reference/kubectl/conventions/](https://kubernetes.io/docs/reference/kubectl/conventions/)
