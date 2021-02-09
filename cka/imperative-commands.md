@@ -10,7 +10,6 @@ kubectl create deployment --image=nginx nginx
 kubectl create deployment --image=nginx nginx --dry-run=client -o yaml  # Generate Deployment YAML file (-o yaml). Don't create it(--dry-run)
 kubectl expose deployment nginx --port 80
 kubectl edit deployment nginx  # Edit command modifies the current state of the kubernetes resources, not the definition yaml files.
-
 kubectl create deployment --image=nginx nginx --dry-run=client -o yaml > nginx-deployment.yaml  #Generate Deployment YAML file (-o yaml). Don't create it(--dry-run) with 4 Replicas (--replicas=4)
 kubectl scale deployment nginx --replicas=5 
 kubectl set image deployment nginx nginx=nginx:1.18
