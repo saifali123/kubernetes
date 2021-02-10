@@ -395,9 +395,6 @@ We can implement Tainst - Tolerantions & Node Affinity both to schedule the pods
  
 # Resource Requirements and Limits
 
-### Resource Requests
-
-By default, Kubernetes assumes that a pod or a container within pod requires 0.5 CPU and 256 Mi (Mebibyte) Memory this is known as **Resource Requests** in a container, the minimum amount of CPU and memory requested by container. The Scheduler uses these values before placing the pods to a node which have this much of resources available.
 
 Kubernetes CPU metrics calculations
 
@@ -426,18 +423,21 @@ For memory:
 
 * Kubernetes Cluster, by default attach 1 vCPU and 512 Mi of memory to a container.
 
-### Resources Required
-*  To request resources for a container, add `resources` section under `spec` section like this:
+### Resources Requests
+
+By default, Kubernetes assumes that a pod or a container within pod requires 0.5 CPU and 256 Mi (Mebibyte) Memory this is known as **Resource Requests** in a container, the minimum amount of CPU and memory requested by container. The Scheduler uses these values before placing the pods to a node which have this much of resources available. If we know that our applications will require more than these resources, we can modify these values in the pod-definition.yml such as like below: 
+
 ```yaml
 spec:
-resources: 
-  requests: 
-    memory: "1Gi"
-    cpu: 1
+  resources: 
+    requests: 
+      memory: "1Gi"
+      cpu: 1
 ```
 
 ### Resources Limits
-* If we attached 1vCPU and 1Gi memory to a container, however in future, that container does not has any limits set and can use total resources of a node, this will impact other containers on that node. So to constraint the limits fo the resources use the below section in any pod-definition.yml file for restricting the limits.
+
+* If we attached 1vCPU and 1Gi memory to a container, however in future, that container does not has any limits set and can use total resources of a node, this will impact other containers on that node. So to constraint the limits of the resources use the below section in any pod-definition.yml file for restricting the limits. 
 
 ```yaml
 spec:
@@ -447,25 +447,25 @@ spec:
       cpu: 2
 ``` 
 
-* However, if we specify the limits for a container for cpu and memory. If the container try to exceeds its limits for CPU the cluster will restrict the container to use more CPU than allocated. However, for the memory, if a container try to use memory above its specified limits the container can use more memory but eventually the cluster will terminate that container.
+* However, the K8s by default, sets a limit to container for CPU as 1vCPU and 512Mi for memory. If the container try to exceeds its limits for CPU the K8s will restrict the container to use more resources. If we need to extend the default K8s limits then we can modify this, in the pod-definition.yml file, such as below:
+
+```yaml
+spec:
+  containers:
+    resources:
+      limits:
+        memory: "2Gi"
+        cpu: 2
+```
+
+Remember, the requests and limits are set to each container within a pod.
+
+However, for the memory, if a container try to use memory above its specified limits the container can use more memory but eventually the K8s will terminate that container.
+
+* In the previous lecture, I said - "When a pod is created the containers are assigned a default CPU request of .5 and memory of 256Mi". For the POD to pick up those defaults you must have first set those as default values for request and limit by creating a LimitRange in that namespace.
 
 * To set the default CPU and memory resources requirements and limits in any namespace, create a resource name as `LimitRange` such as below.
 
-For CPU:
- 
-```yaml
-apiVersion: v1
-kind: LimitRange
-metadata: 
-  name: mem-limit-range
-spec: 
-  limits: 
-  - default:
-      memory: 512Mi
-    defaultRequest:
-      memory: 256Mi
-    type: Container
-```
 
 For Memory:
 
@@ -482,13 +482,29 @@ spec:
       cpu: 0.5
     type: Container
 ``` 
+
+For CPU:
+
+```yaml
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: cpu-limit-range
+spec:
+  limits:
+  - default:
+      cpu: 1
+    defaultRequest:
+      cpu: 0.5
+    type: Container
+```
  
 The status 'OOMKilled' of a pod indicates that the pod ran out of memory. Identify the memory limit set on the POD.
 
 
 
  
-####Edit a POD
+#### Edit a POD
 
 Remember, you CANNOT edit specifications of an existing POD other than the below.
 
