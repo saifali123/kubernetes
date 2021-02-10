@@ -13,3 +13,9 @@ spec:              #dictionary
   containers:      #list/array 
     - name: nginx-controller    # "-" for name specifies that it is the first item in the list.
       image: nginx
+  nodeName: node02
+  tolerations:          # tolerations - this pod will only place on the app=blue taint node
+    - key: "app"
+      operator: "Equal"
+      value: "blue"
+      effect: "NoSchedule"
