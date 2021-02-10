@@ -24,3 +24,8 @@ spec:              #dictionary
   
   nodeSelector:      # Node Selector - k8s will only place this pod on node which has label as "size=Large"
     size: Large
+
+  resources:        # Resources Requests - By default, K8s allocates a pod 0.5 cpu and 256Mi of memory, to allocate more resources, use resource requests
+    requests:
+      memory: "1Gi"
+      cpu: 1
