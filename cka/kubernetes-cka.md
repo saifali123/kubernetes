@@ -395,6 +395,15 @@ We can implement Tainst - Tolerantions & Node Affinity both to schedule the pods
  
 # Resource Requirements and Limits
 
+Kubernetes CPU metrics calculations
+
+| Cores | m(milli) | 1 AWS, GCP, Azure vCPU |
+|-------|----------|------------------------|
+| 0.1   | 1m       |           -            |
+|  1    | 1000m    |           1            |  
+
+
+
 Cpu limits can be specified as 100m(milli). 
 Or 1 CPU, for various platforms such as below,
 1 AWS vCPU
