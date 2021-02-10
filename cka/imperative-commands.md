@@ -62,6 +62,12 @@ kubectl run httpd --image=httpd:alpine --port=80 --expose   # create a pod
 
 ```
 
+**Node Affinity**
+
+```
+kubectl label node node01 color=blue    # Specify a label to a node with color=blue
+```
+
 Reference: [https://kubernetes.io/docs/reference/kubectl/conventions/](https://kubernetes.io/docs/reference/kubectl/conventions/)
 
 
