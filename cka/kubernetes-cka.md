@@ -595,7 +595,7 @@ With Deployments you can easily edit any field/property of the POD template. Sin
 |------------|------------|
 |Created by the Kubelet | Created by the Kube-Api Server (DaemonSet Controller) |
 | Deploy Control Plane components as Static Pods | Deploy monitoring agents, logging agents on nodes |
-| Ignored by the Kube-Scheduler |
+| Ignored by the Kube-Scheduler | Ignored by the Kube-Scheduler |
 # Monitoring
 
 * To get the metrics of pods and nodes use `metrics-server`
