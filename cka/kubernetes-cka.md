@@ -589,7 +589,13 @@ With Deployments you can easily edit any field/property of the POD template. Sin
 
 * Multiple concepts has not been explained in this section, refer the video.
 
+* Static PODs vs DaemonSets
 
+|Static PODs | DaemonSets |
+|------------|------------|
+|Created by the Kubelet | Created by the Kube-Api Server (DaemonSet Controller) |
+| Deploy Control Plane components as Static Pods | Deploy monitoring agents, logging agents on nodes |
+| Ignored by the Kube-Scheduler |
 # Monitoring
 
 * To get the metrics of pods and nodes use `metrics-server`
