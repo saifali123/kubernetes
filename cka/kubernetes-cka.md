@@ -395,6 +395,10 @@ We can implement Tainst - Tolerantions & Node Affinity both to schedule the pods
  
 # Resource Requirements and Limits
 
+### Resource Requests
+
+By default, Kubernetes assumes that a pod or a container within pod requires 0.5 CPU and 256 Mi (Mebibyte) Memory this is known as **Resource Requests** in a container, the minimum amount of CPU and memory requested by container. The Scheduler uses these values before placing the pods to a node which have this much of resources available.
+
 Kubernetes CPU metrics calculations
 
 | Cores | m(milli) | 1 AWS, GCP, Azure vCPU |
@@ -422,7 +426,7 @@ For memory:
 
 * Kubernetes Cluster, by default attach 1 vCPU and 512 Mi of memory to a container.
 
-###Resources Required
+### Resources Required
 *  To request resources for a container, add `resources` section under `spec` section like this:
 ```yaml
 spec:
@@ -432,7 +436,7 @@ resources:
     cpu: 1
 ```
 
-###Resources Limits
+### Resources Limits
 * If we attached 1vCPU and 1Gi memory to a container, however in future, that container does not has any limits set and can use total resources of a node, this will impact other containers on that node. So to constraint the limits fo the resources use the below section in any pod-definition.yml file for restricting the limits.
 
 ```yaml
