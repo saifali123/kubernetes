@@ -13,9 +13,14 @@ spec:              #dictionary
   containers:      #list/array 
     - name: nginx-controller    # "-" for name specifies that it is the first item in the list.
       image: nginx
-  nodeName: node02
+  
+  nodeName: node02    # Manual Scheduling
+  
   tolerations:          # tolerations - this pod will only place on the app=blue taint node
     - key: "app"
       operator: "Equal"
       value: "blue"
       effect: "NoSchedule"
+  
+  nodeSelector:      # Node Selector - k8s will only place this pod on node which has label as "size=Large"
+    size: Large
