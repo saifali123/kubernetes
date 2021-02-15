@@ -31,3 +31,8 @@ spec:              #dictionary
       cpu: 1
       
   schedulerName: my-customer-scheduler    # Custom scheduler created by us, can be specify like this.
+  
+  
+ env:          # array
+   - name: APP_VALUE
+     value: pink
