@@ -728,9 +728,11 @@ spec:
           ```yaml
           spec:
             containers:
+            - image: <image-name>
+              name: 
               envFrom:
                 - configMapRef:
-                  name: app-config   #Here we have specified the metadata name of the configmap to use the configmap data.
+                    name: app-config   #Here we have specified the metadata name of the configmap to use the configmap data.
           ```
           Now, create the pod, `kubectl apply -f pod-definition.yml file`
           
