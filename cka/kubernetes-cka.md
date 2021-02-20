@@ -989,11 +989,11 @@ ETCDCTL_API=3 etcdctl snapshot restore \
         
         * Certificate Creation can be done using multiple tools such as EasyRSA, OpenSSL and CFSSL.
         * But for now we will use OpenSSL.
-        * For creating certificates for Certificate Authority (CA) we will use below steps:
+     ** * For creating certificates for Certificate Authority (CA) we will use below steps:**
             * To create Private Key use `openssl genrsa -out ca.key 2048` command
             * Then we create OpenSSL requests command along with the private key which is created to generate a certificate signing request `openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr`
             * Finally, we sign the certificate using the `openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt` command  
-        * Now for creating certificates for Admin users :
+     ** * Now for creating certificates for Admin users : **
             * Private key for admin users `openssl genrsa -out admin.key 2048`
             * Now, Certificate Signing Request `openssl req -new -key admin.key -subj "/CN=kube-admin" -out admin.csr`. We are creating certificate signing request by the name as `kube-admin`, it is not mandatory to have this name, However, with this name the kubectl client authenticates with and in the audit logs we will see `kube-admin` name so that is the reason provide better name so that we can get to know that this is the name we have assign to certificate signing request.
             * Finally, generate the signed certificate using `openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt` command. Remember that, we provided the Certificate Authority ca.crt(public key) and ca.key(private key) to validate the certificate within our cluster. This makes this certificate a valid certificate. The signed certificate is output to admin.crt, this admin.crt will be use by the admins to access the Kubernetes cluster. If we want to add our user group details as well in the admin.crt then we have to pass additional parameters in the Certificate Signing Request of Admins Users, such as like this `openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters" -out admin.csr`. Here, we can differentiate the admins users with other users by provising the group details such as we have provided in the last command, the group name is `system:masters`.
