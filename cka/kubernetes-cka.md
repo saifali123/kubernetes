@@ -1194,14 +1194,13 @@ kubectl config -h    # For more options
 
 #### ABAC (Attribute Based Access Controls)
 
-![ABAC](./video-screenshots/abac.png)
+![ABAC](./videos-screenshots/abac.png)
 
 The ABAC is hard to manage, for example we have a **dev-user** in which we just have to provide him the permissions for pods operations such as create, view and delete pods. For this, we have to create a K8s object file named as **Policy** file. In this policy file, it will contain all the dev-user permissions details. If we have to modify the permissions of this user, we have to manually edit the file change the permissions and restart the kube-api server which is hard to manage everytime. 
 
 #### RBAC (Role Based Access Controls)
 
-![RBAC](./video-screenshots/rbac.png)
-
+![RBAC](./videos-screenshots/rbac.png)
 
 * RBAC makes it really easier for providing permissions to a users.
 * In this, instead of creating Policy files we can create a roles for developer, admins, etc and add the users in these roles. If the modifications has to be made we can edit the changes in roles and it will affect the user permissions immediately.
