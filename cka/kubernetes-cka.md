@@ -1194,11 +1194,18 @@ kubectl config -h    # For more options
 
 #### ABAC (Attribute Based Access Controls)
 
+![ABAC](./video-screenshots/abac.png)
+
 The ABAC is hard to manage, for example we have a **dev-user** in which we just have to provide him the permissions for pods operations such as create, view and delete pods. For this, we have to create a K8s object file named as **Policy** file. In this policy file, it will contain all the dev-user permissions details. If we have to modify the permissions of this user, we have to manually edit the file change the permissions and restart the kube-api server which is hard to manage everytime. 
 
-!(ABAC)(./video-screenshots/abac.png)
-
 #### RBAC (Role Based Access Controls)
+
+![RBAC](./video-screenshots/rbac.png)
+
+
+* RBAC makes it really easier for providing permissions to a users.
+* In this, instead of creating Policy files we can create a roles for developer, admins, etc and add the users in these roles. If the modifications has to be made we can edit the changes in roles and it will affect the user permissions immediately.
+* RBAC provides more standard approach for managing the users permissions.
 
 * Roles and Roles Bindings are created within a Namespace.
 
@@ -1258,6 +1265,18 @@ kubectl auth can-i create deployments --as <username>  # Checking permissions fo
 kubectl auth can-i create pods --as <username>    # Checking permissions for other user to create pods
 kubectl auth can-i create pods --as <username> --namespace <namespace-name>   # Checking permissions for other user in other namespace to create pods  
 ```
+
+#### Webhooks
+
+* In webhooks, we can integrate third party tools for managing the permissions for users, such as **Open Policy Agent**.
+* When the request comes to kube-api server, the kube-api server then checks the permissions on the Open Policy Agent, if the user has the proper permissions set, then the request is granted otherwise it is denied.
+
+
+#### AlwaysAllow and AlwaysDeny
+
+* In this mode, the always allow mode allows all users to access the cluster and always deny will deny the requests.
+* This mode is configured in the kube-api service as `--authorization-mode=`. The values can be multiple such as `--authorization-mode=Node,RBAC,Webhook`
+* If the authorization mode is configured for multiple modes, then the user request follows the sequence in which the modes are specified, for example in this mode `--authorization-mode=Node,RBAC,Webhook`, the request first goes to the `Node` if the request is denied,then it goes to `RBAC`, once the request is approves the user is authorized for accessing the cluster.
 
 ### Cluster Roles and Cluster RolesBindings
 
