@@ -1178,7 +1178,27 @@ kubectl config -h    # For more options
     
 * Here are two terms that looks same which are `kube proxy` and `kubectl proxy`. Actually, they are not the same. The kube proxy is used to enable connectivity between pods and services across differents nodes within the cluster. Whereas, kubectl proxy is a http proxy service created by kubectl utility to access the kube-api server.
 
-### RBAC (Role Bases Access Controls)
+### Authorization
+
+* There are four authorization mechanisms in K8s:
+ * Node
+ * ABAC (Attribute Based Access Controls)
+ * RBAC (Role Based Access Controls)
+ * Webhook
+
+#### Node Authorizer
+
+* User -> Kube-API <- Kubelet (Read: Services, Endpoints, Nodes, Pods | Write: Node Status, Pod Status, Events)
+* When user and Kubelet tries to access the kube-api server for multiple operations, these requests from users and kubelets is authorized by **Node Authroizer**.
+* As we discussed earlier that, the nodes in the K8s cluster should be the part of system group that means the name of these nodes should be start with **system:node:node01**, once these tag name is authorized by the Node Authorizer the permissions are granted to that node to access the kube-api server.
+
+#### ABAC (Attribute Based Access Controls)
+
+The ABAC is hard to manage, for example we have a **dev-user** in which we just have to provide him the permissions for pods operations such as create, view and delete pods. For this, we have to create a K8s object file named as **Policy** file. In this policy file, it will contain all the dev-user permissions details. If we have to modify the permissions of this user, we have to manually edit the file change the permissions and restart the kube-api server which is hard to manage everytime. 
+
+!(ABAC)(./video-screenshots/abac.png)
+
+#### RBAC (Role Based Access Controls)
 
 * Roles and Roles Bindings are created within a Namespace.
 
